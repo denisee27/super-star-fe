@@ -30,7 +30,7 @@ export default function PasForm({ onSuccess, onBack }) {
       <form onSubmit={onSubmit} className="space-y-4">
         <Input label="Email" type="email" placeholder="email@kamu.com" error={errors.email?.message} required {...register("email")} />
         <Input label="Nama" placeholder="Nama kamu" error={errors.fullName?.message} required {...register("fullName")} />
-        <Input label="Username (TikTok / Shopee / Instagram)" placeholder="@username" error={errors.username?.message} required {...register("username")} />
+        <Input label="Username (TikTok / Shopee)" placeholder="@username" error={errors.username?.message} required {...register("username")} />
         <Select label="GMV per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Input label="Domisili / Kota" placeholder="Contoh: Bandung" error={errors.domicile?.message} required {...register("domicile")} />
         <Button type="submit" disabled={isSubmitting} className="w-full mt-2">

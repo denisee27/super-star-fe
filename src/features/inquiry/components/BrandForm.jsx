@@ -29,7 +29,7 @@ export default function BrandForm({ onSuccess, onBack }) {
         <Input label="Email PIC" type="email" placeholder="email@brand.com" error={errors.email?.message} required {...register("email")} />
         <Input label="Nama Brand" placeholder="Nama brand kamu" error={errors.brandName?.message} required {...register("brandName")} />
         <Input label="Link Toko" placeholder="https://tokopedia.com/nama-toko" error={errors.storeLink?.message} required {...register("storeLink")} />
-        <Input label="Kategori Produk" placeholder="Contoh: Skincare, Fashion, F&B" error={errors.productCategory?.message} required {...register("productCategory")} />
+        <Input label="Kategori Produk" placeholder="Contoh: BHPC, Home Living, Mom & Baby, Lifestyle" error={errors.productCategory?.message} required {...register("productCategory")} />
         <Input label="Nama PIC" placeholder="Nama penanggung jawab" error={errors.picName?.message} required {...register("picName")} />
         <Input label="Role PIC" placeholder="Contoh: Owner, Marketing Manager" error={errors.picRole?.message} required {...register("picRole")} />
         <Input label="Kontak PIC / WhatsApp" placeholder="08xxxxxxxxxx" error={errors.picContact?.message} required {...register("picContact")} />

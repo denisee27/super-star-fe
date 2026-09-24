@@ -6,13 +6,15 @@ const PLATFORMS = [
     key: MCN_PLATFORM.TIKTOK_SHOP,
     title: "MCN TikTok Shop by Tokopedia",
     description: "Manajemen kreator khusus untuk platform TikTok Shop yang terintegrasi dengan Tokopedia.",
-    color: "bg-ink",
+    logo: "/tiktok.png",
+    logoBg: "bg-black",
   },
   {
     key: MCN_PLATFORM.SHOPEE,
     title: "MCN Shopee",
     description: "Manajemen kreator khusus untuk platform Shopee dengan dukungan penuh dari tim Superstar.",
-    color: "bg-orange-500",
+    logo: "/shopee.png",
+    logoBg: "bg-white border border-graphite/10",
   },
 ];
 
@@ -24,14 +26,12 @@ export default function PlatformSelector({ onSelect, onBack }) {
       </button>
       <p className="font-sans text-sm text-graphite mb-4">Pilih platform yang ingin kamu ikuti:</p>
       <div className="space-y-3">
-        {PLATFORMS.map(({ key, title, description, color }) => (
+        {PLATFORMS.map(({ key, title, description, logo, logoBg }) => (
           <button key={key} onClick={() => onSelect(key)} className="w-full text-left group">
             <div className="card-superstar bg-white border border-graphite/15 p-5 hover:border-superstar-blue hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
               <div className="flex items-start gap-4">
-                <div className={`w-10 h-10 rounded ${color} flex items-center justify-center shrink-0`}>
-                  <span className="font-display text-white text-xs uppercase">
-                    {key === MCN_PLATFORM.TIKTOK_SHOP ? "TT" : "SP"}
-                  </span>
+                <div className={`w-10 h-10 rounded-lg ${logoBg} flex items-center justify-center shrink-0 overflow-hidden`}>
+                  <img src={logo} alt={title} className="w-8 h-8 object-contain" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between">

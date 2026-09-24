@@ -92,7 +92,7 @@ function buildPageNumbers(current, total) {
 }
 
 function InquiriesView() {
-  const { inquiries, meta, filters, isLoading, error, updateFilter, setPage, refetch } = useInquiryList();
+  const { inquiries, meta, filters, searchInput, isLoading, error, updateFilter, setPage, refetch } = useInquiryList();
   const { isExporting, handleExport } = useExport();
 
   return (
@@ -106,16 +106,41 @@ function InquiriesView() {
       </div>
 
       <div className="bg-white rounded-xl border border-graphite/15 p-4 mb-4">
-        <FilterBar filters={filters} onFilterChange={updateFilter} />
+        <FilterBar filters={filters} searchInput={searchInput} onFilterChange={updateFilter} />
       </div>
 
-      {isLoading && (
-        <div className="flex justify-center py-12 text-superstar-blue">
-          <Spinner size={28} />
+      {error && <p className="text-center text-red-500 font-sans py-8">{error}</p>}
+
+      {/* Table stays mounted — hanya redup saat loading, tidak pernah hilang */}
+      {!error && (
+        <div className="relative">
+          {/* Thin progress bar — muncul di atas tabel, tidak menghilangkan konten */}
+          {isLoading && (
+            <div className="absolute inset-x-0 -top-px z-10 h-0.5 bg-superstar-blue/15 rounded overflow-hidden">
+              <div className="h-full w-2/5 bg-superstar-blue rounded animate-loading-bar" />
+            </div>
+          )}
+
+          {/* First load: belum ada data sama sekali, tampilkan skeleton */}
+          {isLoading && inquiries.length === 0 ? (
+            <div className="bg-white rounded-xl border border-graphite/15 overflow-hidden">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="flex gap-4 px-4 py-3.5 border-b border-graphite/8 last:border-0 animate-pulse">
+                  <div className="h-4 w-24 bg-graphite/10 rounded" />
+                  <div className="h-4 flex-1 bg-graphite/10 rounded" />
+                  <div className="h-4 w-20 bg-graphite/10 rounded" />
+                  <div className="h-4 w-16 bg-graphite/10 rounded" />
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* Subsequent loads: redup tabel lama, tidak hilang */
+            <div className={`transition-opacity duration-200 ${isLoading ? "opacity-50 pointer-events-none select-none" : "opacity-100"}`}>
+              <InquiryTable inquiries={inquiries} onUpdate={refetch} />
+            </div>
+          )}
         </div>
       )}
-      {error && <p className="text-center text-red-500 font-sans py-8">{error}</p>}
-      {!isLoading && !error && <InquiryTable inquiries={inquiries} onUpdate={refetch} />}
 
       {/* Pagination */}
       {meta.totalPages >= 1 && (
@@ -140,11 +165,10 @@ function InquiriesView() {
                 <button
                   key={p}
                   onClick={() => setPage(p)}
-                  className={`w-8 h-8 rounded font-sans text-sm transition-colors ${
-                    p === meta.page
-                      ? "bg-superstar-blue text-white"
-                      : "bg-white text-graphite border border-graphite/20 hover:border-superstar-blue"
-                  }`}
+                  className={`w-8 h-8 rounded font-sans text-sm transition-colors ${p === meta.page
+                    ? "bg-superstar-blue text-white"
+                    : "bg-white text-graphite border border-graphite/20 hover:border-superstar-blue"
+                    }`}
                 >
                   {p}
                 </button>
@@ -181,11 +205,11 @@ export default function AdminDashboardPage() {
 
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
-        <header className="h-16 bg-white border-b border-graphite/15 px-6 flex items-center">
+        {/* <header className="h-16 bg-white border-b border-graphite/15 px-6 flex items-center">
           <h2 className="font-display text-lg uppercase text-ink">
             {activeView === "dashboard" ? "Dashboard" : activeView === "settings" ? "Pengaturan" : "Data Inquiry"}
           </h2>
-        </header>
+        </header> */}
 
         {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto px-6 py-6">

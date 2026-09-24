@@ -34,7 +34,7 @@ export default function LandingPage() {
           CONNECT WITH<br />SUPERSTAR
         </h1>
         <p className="font-sans text-white/80 text-base mt-4 max-w-lg mx-auto leading-relaxed">
-          Welcome to the Superstar Family!<br />
+          Welcome to the Superstar!<br />
           Kamu satu langkah lagi menuju kolaborasi seru bareng ribuan kreator &amp; brand top di TikTok Shop by Tokopedia &amp; Shopee.
         </p>
         <p className="font-sans text-white/60 text-sm mt-2">Pilih jalurmu sekarang 👇</p>

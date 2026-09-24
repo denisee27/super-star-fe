@@ -17,6 +17,16 @@ export default {
       backgroundImage: {
         "hero-gradient": "linear-gradient(135deg, #0041FB 0%, #001A66 100%)",
       },
+      keyframes: {
+        "loading-bar": {
+          "0%":   { transform: "translateX(-100%)" },
+          "50%":  { transform: "translateX(150%)" },
+          "100%": { transform: "translateX(400%)" },
+        },
+      },
+      animation: {
+        "loading-bar": "loading-bar 1.2s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

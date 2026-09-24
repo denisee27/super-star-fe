@@ -25,7 +25,9 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Skip refresh logic for the login endpoint itself — a 401 there means wrong credentials
+    const isLoginRequest = originalRequest.url?.includes("/admin/login");
+    if (error.response?.status === 401 && !originalRequest._retry && !isLoginRequest) {
       originalRequest._retry = true;
       try {
         const newToken = await silentRefresh();
