@@ -6,11 +6,8 @@ let failedQueue = [];
 
 function processQueue(error, token = null) {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
+    if (error) prom.reject(error);
+    else prom.resolve(token);
   });
   failedQueue = [];
 }
