@@ -1,5 +1,5 @@
 export { useCategoryFlow } from "./hooks/useCategoryFlow.js";
-export { useInquiryForm } from "./hooks/useInquiryForm.js";
+export { useInquiryForm } from "./hooks/useInquiryForm.jsx";
 export { default as StepIndicator } from "./components/StepIndicator.jsx";
 export { default as CategorySelector } from "./components/CategorySelector.jsx";
 export { default as PlatformSelector } from "./components/PlatformSelector.jsx";

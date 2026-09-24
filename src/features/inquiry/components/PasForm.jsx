@@ -6,7 +6,7 @@ import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import { GMV_RANGE } from "../types/inquiry.types.js";
 import { submitPasInquiry } from "../services/inquiryService.js";
-import { useInquiryForm } from "../hooks/useInquiryForm.js";
+import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 
 const GMV_OPTIONS = Object.values(GMV_RANGE).map((v) => ({ value: v, label: v }));
 

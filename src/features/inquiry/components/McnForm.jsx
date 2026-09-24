@@ -6,7 +6,7 @@ import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import { GMV_RANGE, FOLLOWERS_RANGE, MCN_PLATFORM } from "../types/inquiry.types.js";
 import { submitMcnInquiry } from "../services/inquiryService.js";
-import { useInquiryForm } from "../hooks/useInquiryForm.js";
+import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 
 const GMV_OPTIONS = Object.values(GMV_RANGE).map((v) => ({ value: v, label: v }));
 const FOLLOWER_OPTIONS = Object.values(FOLLOWERS_RANGE).map((v) => ({ value: v, label: v }));

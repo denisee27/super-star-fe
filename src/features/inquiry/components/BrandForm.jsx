@@ -4,7 +4,7 @@ import Input from "../../../shared/components/Input.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import { submitBrandInquiry } from "../services/inquiryService.js";
-import { useInquiryForm } from "../hooks/useInquiryForm.js";
+import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 
 const BRAND_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
