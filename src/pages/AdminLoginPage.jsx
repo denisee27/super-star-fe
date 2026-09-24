@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
         <div className="flex justify-center mb-6">
           <Logo variant="blue" height={36} />
         </div>
-        <h1 className="font-display text-2xl uppercase text-ink text-center mb-1">Admin Panel</h1>
+        <h1 className="font-display text-2xl uppercase text-ink text-center mb-1">Admin</h1>
         <p className="font-sans text-sm text-graphite text-center mb-6">Masuk untuk mengelola data inquiry</p>
 
         {serverError && (

@@ -31,10 +31,12 @@ function PublicOnlyRoute() {
 }
 
 const router = createBrowserRouter([
-  { path: "/", element: <LandingPage /> },
   {
     element: <PublicOnlyRoute />,
-    children: [{ path: "/admin/login", element: <AdminLoginPage /> }],
+    children: [
+      { path: "/", element: <LandingPage /> },
+      { path: "/admin/login", element: <AdminLoginPage /> },
+    ],
   },
   {
     element: <ProtectedRoute />,
