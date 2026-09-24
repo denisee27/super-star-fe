@@ -19,7 +19,7 @@ const PAS_SCHEMA = z.object({
 });
 
 export default function PasForm({ onSuccess, onBack }) {
-  const { form, isSubmitting, onSubmit } = useInquiryForm(PAS_SCHEMA, submitPasInquiry, onSuccess);
+  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(PAS_SCHEMA, submitPasInquiry, onSuccess);
   const { register, formState: { errors } } = form;
 
   return (
@@ -37,6 +37,7 @@ export default function PasForm({ onSuccess, onBack }) {
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Gabung Sekarang"}
         </Button>
       </form>
+      {confirmModal}
     </div>
   );
 }

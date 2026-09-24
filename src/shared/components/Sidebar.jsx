@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import Logo from "./Logo.jsx";
+import ConfirmModal from "./ConfirmModal.jsx";
 
 const NAV_ITEMS = [
   // { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -8,6 +10,8 @@ const NAV_ITEMS = [
 ];
 
 export default function Sidebar({ activeView, onViewChange, onLogout, collapsed, onToggle }) {
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   return (
     <aside
       className={`flex flex-col h-full bg-deep-blue text-white transition-all duration-300 ${collapsed ? "w-16" : "w-56"} shrink-0`}
@@ -45,13 +49,23 @@ export default function Sidebar({ activeView, onViewChange, onLogout, collapsed,
       {/* Logout */}
       <div className="p-2 border-t border-white/10">
         <button
-          onClick={onLogout}
+          onClick={() => setShowLogoutConfirm(true)}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/10 hover:text-white transition-colors font-sans text-sm font-medium"
         >
           <LogOut size={18} className="shrink-0" />
           {!collapsed && <span>Keluar</span>}
         </button>
       </div>
+
+      <ConfirmModal
+        isOpen={showLogoutConfirm}
+        onConfirm={onLogout}
+        onCancel={() => setShowLogoutConfirm(false)}
+        title="Konfirmasi Keluar"
+        message="Kamu akan keluar dari sesi admin ini. Lanjutkan?"
+        confirmLabel="Ya, Keluar"
+        variant="danger"
+      />
     </aside>
   );
 }

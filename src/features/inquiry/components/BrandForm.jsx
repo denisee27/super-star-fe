@@ -17,7 +17,7 @@ const BRAND_SCHEMA = z.object({
 });
 
 export default function BrandForm({ onSuccess, onBack }) {
-  const { form, isSubmitting, onSubmit } = useInquiryForm(BRAND_SCHEMA, submitBrandInquiry, onSuccess);
+  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(BRAND_SCHEMA, submitBrandInquiry, onSuccess);
   const { register, formState: { errors } } = form;
 
   return (
@@ -37,6 +37,7 @@ export default function BrandForm({ onSuccess, onBack }) {
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Kirim"}
         </Button>
       </form>
+      {confirmModal}
     </div>
   );
 }

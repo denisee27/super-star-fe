@@ -27,7 +27,7 @@ const PLATFORM_LABEL = {
 };
 
 export default function McnForm({ platform, onSuccess, onBack }) {
-  const { form, isSubmitting, onSubmit } = useInquiryForm(
+  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(
     MCN_SCHEMA,
     (data) => submitMcnInquiry({ ...data, platform }),
     onSuccess
@@ -54,6 +54,7 @@ export default function McnForm({ platform, onSuccess, onBack }) {
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Daftar Sekarang"}
         </Button>
       </form>
+      {confirmModal}
     </div>
   );
 }
