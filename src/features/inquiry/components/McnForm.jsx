@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { z } from "zod";
 import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
@@ -6,6 +7,7 @@ import Select from "../../../shared/components/Select.jsx";
 import CitySelect from "../../../shared/components/CitySelect.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
+import Captcha from "../../../shared/components/Captcha.jsx";
 import { GMV_RANGE, FOLLOWERS_RANGE, MCN_PLATFORM } from "../types/inquiry.types.js";
 import { submitMcnInquiry } from "../services/inquiryService.js";
 import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
@@ -29,6 +31,7 @@ const PLATFORM_LABEL = {
 };
 
 export default function McnForm({ platform, onSuccess, onBack }) {
+  const [captchaOk, setCaptchaOk] = useState(false);
   const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(
     MCN_SCHEMA,
     (data) => submitMcnInquiry({ ...data, platform }),
@@ -58,7 +61,8 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         />
         <Select label="GMV Live/Konten rata-rata per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Select label="Jumlah Followers" placeholder="-- Pilih range followers --" options={FOLLOWER_OPTIONS} error={errors.followersRange?.message} required {...register("followersRange")} />
-        <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+        <Captcha onVerify={setCaptchaOk} />
+        <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Daftar Sekarang"}
         </Button>
       </form>

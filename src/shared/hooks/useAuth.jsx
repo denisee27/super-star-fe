@@ -45,8 +45,15 @@ export function AuthProvider({ children }) {
     setAccessToken(null);
   }, [setAccessToken]);
 
+  // Decode role from JWT payload (no verification — server validates on every request)
+  let role = null;
+  if (accessToken) {
+    try { role = JSON.parse(atob(accessToken.split(".")[1])).role ?? null; } catch { /* ignore */ }
+  }
+  const isSuperAdmin = role === "SUPER_ADMIN";
+
   return (
-    <AuthContext.Provider value={{ accessToken, setAccessToken, isAuthenticated: !!accessToken, isInitializing, logout }}>
+    <AuthContext.Provider value={{ accessToken, setAccessToken, isAuthenticated: !!accessToken, isInitializing, logout, role, isSuperAdmin }}>
       {children}
     </AuthContext.Provider>
   );

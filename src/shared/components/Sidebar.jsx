@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings, UserCog, ClipboardList } from "lucide-react";
 import Logo from "./Logo.jsx";
 import ConfirmModal from "./ConfirmModal.jsx";
 
@@ -9,8 +9,15 @@ const NAV_ITEMS = [
   { id: "settings", label: "Pengaturan", icon: Settings },
 ];
 
-export default function Sidebar({ activeView, onViewChange, onLogout, collapsed, onToggle }) {
+const SUPER_ADMIN_ITEMS = [
+  { id: "users", label: "Pengguna", icon: UserCog },
+  // { id: "logs", label: "Log Aktivitas", icon: ClipboardList },
+];
+
+export default function Sidebar({ activeView, onViewChange, onLogout, collapsed, onToggle, isSuperAdmin }) {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const allItems = isSuperAdmin ? [...NAV_ITEMS, ...SUPER_ADMIN_ITEMS] : NAV_ITEMS;
 
   return (
     <aside
@@ -29,8 +36,8 @@ export default function Sidebar({ activeView, onViewChange, onLogout, collapsed,
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 space-y-1 px-2">
-        {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
+      <nav className="flex-1 py-4 space-y-1 px-2 overflow-y-auto">
+        {allItems.map(({ id, label, icon: Icon }) => {
           const active = activeView === id;
           return (
             <button

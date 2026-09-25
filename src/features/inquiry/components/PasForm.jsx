@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { z } from "zod";
 import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
@@ -6,6 +7,7 @@ import Select from "../../../shared/components/Select.jsx";
 import CitySelect from "../../../shared/components/CitySelect.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
+import Captcha from "../../../shared/components/Captcha.jsx";
 import { GMV_RANGE } from "../types/inquiry.types.js";
 import { submitPasInquiry } from "../services/inquiryService.js";
 import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
@@ -21,6 +23,7 @@ const PAS_SCHEMA = z.object({
 });
 
 export default function PasForm({ onSuccess, onBack }) {
+  const [captchaOk, setCaptchaOk] = useState(false);
   const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(PAS_SCHEMA, submitPasInquiry, onSuccess);
   const { register, control, formState: { errors } } = form;
 
@@ -41,7 +44,8 @@ export default function PasForm({ onSuccess, onBack }) {
             <CitySelect label="Domisili / Kota" error={errors.domicile?.message} required value={field.value || ""} onChange={field.onChange} />
           )}
         />
-        <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+        <Captcha onVerify={setCaptchaOk} />
+        <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Gabung Sekarang"}
         </Button>
       </form>

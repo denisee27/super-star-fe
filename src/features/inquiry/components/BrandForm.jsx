@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { z } from "zod";
 import { ArrowLeft } from "lucide-react";
 import Input from "../../../shared/components/Input.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
+import Captcha from "../../../shared/components/Captcha.jsx";
 import { submitBrandInquiry } from "../services/inquiryService.js";
 import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 
@@ -17,6 +19,7 @@ const BRAND_SCHEMA = z.object({
 });
 
 export default function BrandForm({ onSuccess, onBack }) {
+  const [captchaOk, setCaptchaOk] = useState(false);
   const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(BRAND_SCHEMA, submitBrandInquiry, onSuccess);
   const { register, formState: { errors } } = form;
 
@@ -33,7 +36,8 @@ export default function BrandForm({ onSuccess, onBack }) {
         <Input label="Nama PIC" placeholder="Nama penanggung jawab" error={errors.picName?.message} required {...register("picName")} />
         <Input label="Role PIC" placeholder="Contoh: Owner, Marketing Manager" error={errors.picRole?.message} required {...register("picRole")} />
         <Input label="Kontak PIC / WhatsApp" placeholder="08xxxxxxxxxx" error={errors.picContact?.message} required {...register("picContact")} />
-        <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
+        <Captcha onVerify={setCaptchaOk} />
+        <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Kirim"}
         </Button>
       </form>
