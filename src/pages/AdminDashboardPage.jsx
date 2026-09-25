@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Users, TrendingUp, Star, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { Users, TrendingUp, Star, RefreshCw, ChevronLeft, ChevronRight, CalendarDays, X } from "lucide-react";
 import { useAuth } from "../shared/hooks/useAuth.jsx";
 import { useInquiryList, useExport, InquiryTable, FilterBar, ExportButton } from "../features/admin/index.js";
 import { useDashboard, StatCard, TrendChart, CategoryChart, StatusChart, TopDomiciliChart, PlatformGmvChart } from "../features/dashboard/index.js";
@@ -7,73 +9,102 @@ import { BdWaSettings } from "../features/settings/index.js";
 import Sidebar from "../shared/components/Sidebar.jsx";
 import Spinner from "../shared/components/Spinner.jsx";
 
+function toDateStr(date) {
+  if (!date) return "";
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function DashboardView() {
-  const { stats, isLoading, error } = useDashboard();
+  const { stats, isLoading, error, startDate, endDate, setDateRange, clearDateRange } = useDashboard();
+  const [pickerDates, setPickerDates] = useState([null, null]);
+  const [startPicker, endPicker] = pickerDates;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-64 text-superstar-blue">
-        <Spinner size={32} />
-      </div>
-    );
+  function handleDateChange(dates) {
+    const [start, end] = dates;
+    setPickerDates(dates);
+    if (start && end) {
+      setDateRange(toDateStr(start), toDateStr(end));
+    }
   }
 
-  if (error) {
-    return <p className="text-center text-red-500 font-sans py-12">{error}</p>;
+  function handleClear() {
+    setPickerDates([null, null]);
+    clearDateRange();
   }
 
-  if (!stats) return null;
-
-  const { overview, byCategory, byStatus, trend, topDomicili, byPlatform, byGmvRange } = stats;
-
-  const growthLabel = overview.lastMonth > 0
-    ? `+${Math.round(((overview.thisMonth - overview.lastMonth) / overview.lastMonth) * 100)}% vs bulan lalu`
-    : `${overview.thisMonth} bulan ini`;
+  const hasFilter = startDate && endDate;
 
   return (
     <div className="space-y-6">
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Total Inquiry"
-          value={overview.total}
-          icon={Users}
-          accent
-        />
-        <StatCard
-          label="Bulan Ini"
-          value={overview.thisMonth}
-          sub={growthLabel}
-          icon={TrendingUp}
-        />
-        <StatCard
-          label="Inquiry Baru"
-          value={overview.newCount}
-          sub="Menunggu tindak lanjut"
-          icon={RefreshCw}
-        />
-        <StatCard
-          label="Qualified"
-          value={overview.qualified}
-          sub="Siap closing"
-          icon={Star}
-        />
+      {/* Header + date filter */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl uppercase text-ink">Dashboard</h1>
+          {hasFilter && (
+            <p className="font-sans text-xs text-graphite mt-0.5">
+              Menampilkan data {startDate} — {endDate}
+            </p>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative flex items-center">
+            <CalendarDays size={15} className="absolute left-3 text-graphite/60 pointer-events-none" />
+            <DatePicker
+              selectsRange
+              startDate={startPicker}
+              endDate={endPicker}
+              onChange={handleDateChange}
+              dateFormat="dd/MM/yyyy"
+              placeholderText="Filter rentang tanggal..."
+              maxDate={new Date()}
+              className="pl-8 pr-3 py-2 font-sans text-sm border border-graphite/25 rounded-lg bg-white text-ink placeholder-graphite/50 outline-none focus:ring-2 focus:ring-superstar-blue focus:border-superstar-blue w-56"
+            />
+          </div>
+          {hasFilter && (
+            <button
+              onClick={handleClear}
+              className="flex items-center gap-1 px-3 py-2 rounded-lg border border-graphite/25 font-sans text-sm text-graphite hover:bg-cloud transition-colors"
+            >
+              <X size={14} /> Reset
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Trend */}
-      <TrendChart data={trend} />
+      {isLoading && (
+        <div className="flex items-center justify-center h-64 text-superstar-blue">
+          <Spinner size={32} />
+        </div>
+      )}
 
-      {/* Category + Status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <CategoryChart data={byCategory} />
-        <StatusChart data={byStatus} rawData={byStatus} />
-      </div>
+      {!isLoading && error && (
+        <p className="text-center text-red-500 font-sans py-12">{error}</p>
+      )}
 
-      {/* Top domicili */}
-      <TopDomiciliChart data={topDomicili} />
+      {!isLoading && stats && (() => {
+        const { overview, byCategory, byStatus, trend, topDomicili, byPlatform, byGmvRange } = stats;
+        const growthLabel = overview.lastMonth > 0
+          ? `+${Math.round(((overview.thisMonth - overview.lastMonth) / overview.lastMonth) * 100)}% vs bulan lalu`
+          : `${overview.thisMonth} bulan ini`;
 
-      {/* Platform + GMV */}
-      <PlatformGmvChart byPlatform={byPlatform} byGmvRange={byGmvRange} />
+        return (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <StatCard label="Total Inquiry" value={overview.total} icon={Users} accent />
+              <StatCard label="Bulan Ini" value={overview.thisMonth} sub={growthLabel} icon={TrendingUp} />
+              <StatCard label="Inquiry Baru" value={overview.newCount} sub="Menunggu tindak lanjut" icon={RefreshCw} />
+              <StatCard label="Qualified" value={overview.qualified} sub="Siap closing" icon={Star} />
+            </div>
+            <TrendChart data={trend} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <CategoryChart data={byCategory} />
+              <StatusChart data={byStatus} rawData={byStatus} />
+            </div>
+            <TopDomiciliChart data={topDomicili} />
+            <PlatformGmvChart byPlatform={byPlatform} byGmvRange={byGmvRange} />
+          </>
+        );
+      })()}
     </div>
   );
 }

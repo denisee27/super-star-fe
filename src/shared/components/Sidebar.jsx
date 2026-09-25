@@ -4,7 +4,7 @@ import Logo from "./Logo.jsx";
 import ConfirmModal from "./ConfirmModal.jsx";
 
 const NAV_ITEMS = [
-  // { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "inquiries", label: "Data Inquiry", icon: Users },
   { id: "settings", label: "Pengaturan", icon: Settings },
 ];

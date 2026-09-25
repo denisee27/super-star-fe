@@ -1,7 +1,9 @@
 import { z } from "zod";
+import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
 import Input from "../../../shared/components/Input.jsx";
 import Select from "../../../shared/components/Select.jsx";
+import CitySelect from "../../../shared/components/CitySelect.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import { GMV_RANGE, FOLLOWERS_RANGE, MCN_PLATFORM } from "../types/inquiry.types.js";
@@ -32,7 +34,7 @@ export default function McnForm({ platform, onSuccess, onBack }) {
     (data) => submitMcnInquiry({ ...data, platform }),
     onSuccess
   );
-  const { register, formState: { errors } } = form;
+  const { register, control, formState: { errors } } = form;
 
   return (
     <div>
@@ -47,7 +49,13 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         <Input label="Nama Lengkap" placeholder="Nama lengkap kamu" error={errors.fullName?.message} required {...register("fullName")} />
         <Input label="No HP / WhatsApp" placeholder="08xxxxxxxxxx" error={errors.phone?.message} required {...register("phone")} />
         <Input label="Link Akun" placeholder="https://www.tiktok.com/@username" error={errors.accountLink?.message} required {...register("accountLink")} />
-        <Input label="Domisili / Kota" placeholder="Contoh: Jakarta Selatan" error={errors.domicile?.message} required {...register("domicile")} />
+        <Controller
+          control={control}
+          name="domicile"
+          render={({ field }) => (
+            <CitySelect label="Domisili / Kota" error={errors.domicile?.message} required value={field.value || ""} onChange={field.onChange} />
+          )}
+        />
         <Select label="GMV Live/Konten rata-rata per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Select label="Jumlah Followers" placeholder="-- Pilih range followers --" options={FOLLOWER_OPTIONS} error={errors.followersRange?.message} required {...register("followersRange")} />
         <Button type="submit" disabled={isSubmitting} className="w-full mt-2">
