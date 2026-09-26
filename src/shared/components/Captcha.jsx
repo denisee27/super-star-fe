@@ -13,7 +13,7 @@ function generateCode() {
   return String(Math.floor(10000 + Math.random() * 90000));
 }
 
-// Warp every pixel using dual sine waves — defeats standard OCR
+// Light wave warp — still defeats template OCR but characters remain readable
 function applyWave(src, dst) {
   const W = src.width;
   const H = src.height;
@@ -23,10 +23,10 @@ function applyWave(src, dst) {
 
   const phX = Math.random() * Math.PI * 2;
   const phY = Math.random() * Math.PI * 2;
-  const aX = 6 + Math.random() * 4;
-  const aY = 5 + Math.random() * 3;
-  const fX = (Math.PI * 2) / (H * (0.45 + Math.random() * 0.25));
-  const fY = (Math.PI * 2) / (W * (0.5 + Math.random() * 0.3));
+  const aX = 2 + Math.random() * 2;   // was 6–10, now 2–4
+  const aY = 1.5 + Math.random() * 1.5; // was 5–8, now 1.5–3
+  const fX = (Math.PI * 2) / (H * (0.6 + Math.random() * 0.3));
+  const fY = (Math.PI * 2) / (W * (0.7 + Math.random() * 0.3));
 
   for (let y = 0; y < H; y++) {
     for (let x = 0; x < W; x++) {
@@ -50,110 +50,90 @@ function drawCaptcha(canvas, code) {
   const H = canvas.height;
   const ctx = canvas.getContext("2d");
 
-  // Draw base onto an offscreen canvas, then wave-warp onto the visible one
   const off = document.createElement("canvas");
   off.width = W;
   off.height = H;
   const octx = off.getContext("2d");
 
-  // Textured background
+  // Clean gradient background
   const grad = octx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0,   "#ccd9ff");
-  grad.addColorStop(0.5, "#d8e6ff");
-  grad.addColorStop(1,   "#c5d5fe");
+  grad.addColorStop(0,   "#dce8ff");
+  grad.addColorStop(0.5, "#e8f0ff");
+  grad.addColorStop(1,   "#d4e4fe");
   octx.fillStyle = grad;
   octx.fillRect(0, 0, W, H);
 
-  // Dense background dots
-  for (let i = 0; i < 110; i++) {
+  // Light background noise — reduced from 110 to 40
+  for (let i = 0; i < 40; i++) {
     octx.beginPath();
-    octx.arc(Math.random() * W, Math.random() * H, rand(0.5, 2.5), 0, Math.PI * 2);
-    octx.fillStyle = `rgba(${rand(20, 120)}, ${rand(20, 120)}, ${rand(110, 200)}, ${0.2 + Math.random() * 0.45})`;
+    octx.arc(Math.random() * W, Math.random() * H, rand(0.5, 1.5), 0, Math.PI * 2);
+    octx.fillStyle = `rgba(${rand(40, 120)}, ${rand(40, 120)}, ${rand(130, 200)}, ${0.1 + Math.random() * 0.2})`;
     octx.fill();
   }
 
-  // Ghost decoy digits — confuse OCR segmentation
-  for (let i = 0; i < 4; i++) {
-    octx.save();
-    octx.globalAlpha = 0.09 + Math.random() * 0.11;
-    octx.font = `bold ${rand(20, 30)}px ${Math.random() > 0.5 ? "serif" : "monospace"}`;
-    octx.fillStyle = `rgb(${rand(0, 70)}, ${rand(0, 70)}, ${rand(110, 170)})`;
-    octx.textBaseline = "middle";
-    octx.fillText(
-      String(rand(0, 9)),
-      Math.random() * W * 0.85,
-      H * 0.15 + Math.random() * H * 0.7
-    );
-    octx.restore();
-  }
-
-  // Background curves (under characters)
-  for (let i = 0; i < 4; i++) {
+  // Subtle background lines — reduced from 4 to 2
+  for (let i = 0; i < 2; i++) {
     octx.beginPath();
     octx.moveTo(rand(0, W * 0.2), Math.random() * H);
     octx.bezierCurveTo(
-      W * 0.25 + rand(-15, 15), Math.random() * H,
-      W * 0.6  + rand(-15, 15), Math.random() * H,
-      W * 0.82 + rand(0, W * 0.18), Math.random() * H
+      W * 0.35 + rand(-10, 10), Math.random() * H,
+      W * 0.65 + rand(-10, 10), Math.random() * H,
+      W * 0.9  + rand(0, W * 0.1), Math.random() * H
     );
-    octx.strokeStyle = `rgba(${rand(50, 140)}, ${rand(50, 140)}, ${rand(130, 210)}, 0.28)`;
-    octx.lineWidth = rand(1, 3);
+    octx.strokeStyle = `rgba(${rand(80, 150)}, ${rand(80, 150)}, ${rand(150, 210)}, 0.18)`;
+    octx.lineWidth = 1;
     octx.stroke();
   }
 
-  // Draw each character with heavy per-character distortion
-  const fonts = ["monospace", "serif", "monospace", "serif", "monospace"];
+  // Draw characters — rotation ±15° (was ±38°), light skew
   const charW = W / code.length;
   for (let i = 0; i < code.length; i++) {
     octx.save();
     const x = charW * i + charW / 2;
-    octx.translate(x, H / 2 + (Math.random() - 0.5) * 18);
+    octx.translate(x, H / 2 + (Math.random() - 0.5) * 8); // was ±18, now ±8
 
-    // Rotation up to ±38°
-    octx.rotate((Math.random() - 0.5) * (Math.PI / 2.4));
+    // Rotation ±15° (was ±38°)
+    octx.rotate((Math.random() - 0.5) * (Math.PI / 6));
 
-    // Skew both axes
+    // Light skew (was 0.55 / 0.4, now 0.2 / 0.1)
     octx.transform(
-      1, (Math.random() - 0.5) * 0.55,
-      (Math.random() - 0.5) * 0.4, 1,
+      1, (Math.random() - 0.5) * 0.2,
+      (Math.random() - 0.5) * 0.1, 1,
       0, 0
     );
 
-    const fontSize = rand(26, 36);
-    octx.font = `bold ${fontSize}px ${fonts[Math.floor(Math.random() * fonts.length)]}`;
-    octx.fillStyle = `rgb(${rand(0, 45)}, ${rand(0, 55)}, ${rand(95, 175)})`;
-    octx.shadowColor = "rgba(0,0,60,0.55)";
-    octx.shadowBlur = 5;
-    octx.shadowOffsetX = rand(1, 3);
-    octx.shadowOffsetY = rand(1, 3);
+    octx.font = `bold ${rand(26, 32)}px monospace`;
+    octx.fillStyle = `rgb(${rand(10, 50)}, ${rand(20, 70)}, ${rand(120, 180)})`;
+    octx.shadowColor = "rgba(0,0,60,0.3)";
+    octx.shadowBlur = 3;
     octx.textAlign = "center";
     octx.textBaseline = "middle";
     octx.fillText(code[i], 0, 0);
     octx.restore();
   }
 
-  // Apply wave pixel distortion from offscreen → visible canvas
+  // Light wave warp
   applyWave(off, canvas);
 
-  // Interference lines drawn ON TOP of the warped image
-  for (let i = 0; i < 7; i++) {
+  // 3 interference lines on top (was 7)
+  for (let i = 0; i < 3; i++) {
     ctx.beginPath();
-    ctx.moveTo(rand(0, W * 0.15), rand(H * 0.1, H * 0.9));
+    ctx.moveTo(rand(0, W * 0.1), rand(H * 0.2, H * 0.8));
     ctx.bezierCurveTo(
-      W * 0.28 + rand(-20, 20), rand(H * 0.05, H * 0.95),
-      W * 0.66 + rand(-20, 20), rand(H * 0.05, H * 0.95),
-      W - rand(0, W * 0.15),   rand(H * 0.1, H * 0.9)
+      W * 0.3 + rand(-15, 15), rand(H * 0.1, H * 0.9),
+      W * 0.6 + rand(-15, 15), rand(H * 0.1, H * 0.9),
+      W - rand(0, W * 0.1),    rand(H * 0.2, H * 0.8)
     );
-    ctx.strokeStyle = `rgba(${rand(10, 100)}, ${rand(10, 100)}, ${rand(130, 210)}, ${0.3 + Math.random() * 0.35})`;
-    ctx.lineWidth = rand(1, 2);
+    ctx.strokeStyle = `rgba(${rand(30, 100)}, ${rand(30, 100)}, ${rand(140, 200)}, ${0.2 + Math.random() * 0.2})`;
+    ctx.lineWidth = 1;
     ctx.stroke();
   }
 
-  // Final noise layer
-  for (let i = 0; i < 60; i++) {
+  // Minimal noise overlay (was 60, now 20)
+  for (let i = 0; i < 20; i++) {
     ctx.beginPath();
-    ctx.arc(Math.random() * W, Math.random() * H, rand(0.5, 2), 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${rand(0, 80)}, ${rand(0, 80)}, ${rand(110, 200)}, 0.4)`;
+    ctx.arc(Math.random() * W, Math.random() * H, rand(0.5, 1.5), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${rand(0, 80)}, ${rand(0, 80)}, ${rand(120, 200)}, 0.25)`;
     ctx.fill();
   }
 }
