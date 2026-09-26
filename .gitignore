@@ -13,6 +13,11 @@ docs
 dist-ssr
 *.local
 
+# Environment files — use Vercel env settings for production
+.env
+.env.local
+.env.*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
