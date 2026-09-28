@@ -7,8 +7,14 @@ export default function ConfirmModal({ isOpen, onConfirm, onCancel, title, messa
     function handleKey(e) {
       if (e.key === "Escape" && !isLoading) onCancel();
     }
-    if (isOpen) document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
+    if (isOpen) {
+      document.addEventListener("keydown", handleKey);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+      document.body.style.overflow = "";
+    };
   }, [isOpen, isLoading, onCancel]);
 
   if (!isOpen) return null;

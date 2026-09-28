@@ -24,7 +24,7 @@ const PAS_SCHEMA = z.object({
 
 export default function PasForm({ onSuccess, onBack }) {
   const [captchaOk, setCaptchaOk] = useState(false);
-  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(PAS_SCHEMA, submitPasInquiry, onSuccess);
+  const { form, isSubmitting, onSubmit } = useInquiryForm(PAS_SCHEMA, submitPasInquiry, onSuccess, { skipOtp: true });
   const { register, control, formState: { errors } } = form;
 
   return (
@@ -44,12 +44,14 @@ export default function PasForm({ onSuccess, onBack }) {
             <CitySelect label="Domisili / Kota" error={errors.domicile?.message} required value={field.value || ""} onChange={field.onChange} />
           )}
         />
+        {errors.root && (
+          <p className="font-sans text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{errors.root.message}</p>
+        )}
         <Captcha onVerify={setCaptchaOk} />
         <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Gabung Sekarang"}
         </Button>
       </form>
-      {confirmModal}
     </div>
   );
 }

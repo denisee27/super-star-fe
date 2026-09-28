@@ -12,7 +12,7 @@ function getNextCooldown(resendCount) {
   return RESEND_COOLDOWNS_SECS[Math.min(resendCount, RESEND_COOLDOWNS_SECS.length - 1)];
 }
 
-export function useInquiryForm(schema, submitFn, onSuccess) {
+export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } = {}) {
   const form = useForm({ resolver: zodResolver(schema) });
   const [pendingData, setPendingData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,8 +20,21 @@ export function useInquiryForm(schema, submitFn, onSuccess) {
   const [otpError, setOtpError] = useState("");
   const [resendCount, setResendCount] = useState(0);
 
-  // Called after react-hook-form validates — send OTP then show modal
+  // Called after react-hook-form validates — skip OTP or send OTP then show modal
   async function handleSubmit(data) {
+    if (skipOtp) {
+      setIsSubmitting(true);
+      try {
+        await submitFn(data);
+        onSuccess(data);
+      } catch (err) {
+        form.setError("root", { message: err.response?.data?.error ?? "Terjadi kesalahan. Coba lagi." });
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
     setOtpError("");
     setResendCount(0);
     setIsSendingOtp(true);
@@ -43,8 +56,8 @@ export function useInquiryForm(schema, submitFn, onSuccess) {
     try {
       await verifyOtp(pendingData.email, code);
       const data = pendingData;
-      setPendingData(null);
       await submitFn(data);
+      setPendingData(null);
       onSuccess(data);
     } catch (err) {
       setOtpError(err.response?.data?.error ?? "Verifikasi gagal. Periksa kode kamu.");

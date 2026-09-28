@@ -8,14 +8,18 @@ export default function OtpModal({ isOpen, email, onVerify, onResend, isVerifyin
   const [resendCooldown, setResendCooldown] = useState(60);
   const inputRefs = useRef([]);
 
-  // Reset state when modal opens
+  // Reset state when modal opens + lock body scroll
   useEffect(() => {
     if (isOpen) {
       setDigits(["", "", "", "", "", ""]);
       setSecondsLeft(300);
       setResendCooldown(60);
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
+      document.body.style.overflow = "hidden";
     }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [isOpen]);
 
   // OTP expiry countdown

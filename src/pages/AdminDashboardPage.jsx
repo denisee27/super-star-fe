@@ -67,6 +67,11 @@ function DashboardView() {
         const growthLabel = !hasFilter && overview.lastMonth > 0
           ? `+${Math.round(((overview.thisMonth - overview.lastMonth) / overview.lastMonth) * 100)}% vs bulan lalu`
           : null;
+
+        const mcnTiktok = byPlatform.find((p) => p.name === "TikTok Shop")?.value ?? 0;
+        const mcnShopee = byPlatform.find((p) => p.name === "Shopee")?.value ?? 0;
+        const mcnTotal  = mcnTiktok + mcnShopee;
+
         return (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -75,6 +80,51 @@ function DashboardView() {
               <StatCard label="Inquiry Baru" value={overview.newCount} sub="Menunggu tindak lanjut" icon={RefreshCw} />
               <StatCard label="Qualified" value={overview.qualified} sub="Siap closing" icon={Star} />
             </div>
+
+            {/* MCN Agency breakdown */}
+            <div className="bg-white rounded-xl border border-graphite/15 p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-sans font-semibold text-sm text-graphite uppercase tracking-wide">MCN Agency</h3>
+                <span className="font-sans text-xs text-graphite bg-cloud px-2.5 py-1 rounded-full">
+                  Total {mcnTotal} pendaftar
+                </span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex items-center gap-4 rounded-lg border border-graphite/10 bg-cloud/50 px-5 py-4">
+                  <div className="w-10 h-10 rounded-lg bg-black flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="white">
+                      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.17 8.17 0 0 0 4.77 1.52V6.75a4.85 4.85 0 0 1-1-.06z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-sans text-xs text-graphite uppercase tracking-wide mb-0.5">MCN TikTok Shop</p>
+                    <p className="font-display text-3xl text-ink">{mcnTiktok}</p>
+                    {mcnTotal > 0 && (
+                      <p className="font-sans text-xs text-graphite mt-0.5">
+                        {Math.round((mcnTiktok / mcnTotal) * 100)}% dari total MCN
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 rounded-lg border border-graphite/10 bg-cloud/50 px-5 py-4">
+                  <div className="w-10 h-10 rounded-lg bg-[#EE4D2D] flex items-center justify-center shrink-0">
+                    <svg viewBox="0 0 50 50" width="22" height="22" fill="white">
+                      <path d="M25 2C12.3 2 2 12.3 2 25s10.3 23 23 23 23-10.3 23-23S37.7 2 25 2zm0 10c3.9 0 7 3.1 7 7s-3.1 7-7 7-7-3.1-7-7 3.1-7 7-7zm0 32c-5.8 0-10.9-2.6-14.4-6.8 1.8-3.5 5.4-5.9 9.6-5.9.2 0 .5 0 .7.1 1.3.4 2.6.7 4.1.7 1.5 0 2.9-.3 4.1-.7.2-.1.5-.1.7-.1 4.2 0 7.8 2.4 9.6 5.9C35.9 41.4 30.8 44 25 44z"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-sans text-xs text-graphite uppercase tracking-wide mb-0.5">MCN Shopee</p>
+                    <p className="font-display text-3xl text-ink">{mcnShopee}</p>
+                    {mcnTotal > 0 && (
+                      <p className="font-sans text-xs text-graphite mt-0.5">
+                        {Math.round((mcnShopee / mcnTotal) * 100)}% dari total MCN
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <TrendChart data={trend} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <CategoryChart data={byCategory} />

@@ -23,6 +23,7 @@ const MCN_SCHEMA = z.object({
   domicile: z.string().min(2, "Domisili wajib diisi"),
   gmvRange: z.string().min(1, "Pilih range GMV"),
   followersRange: z.string().min(1, "Pilih range followers"),
+  hasPreviousMcn: z.enum(["SUDAH", "BELUM"], { errorMap: () => ({ message: "Pilih salah satu" }) }),
 });
 
 const PLATFORM_LABEL = {
@@ -61,6 +62,17 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         />
         <Select label="GMV Live/Konten rata-rata per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Select label="Jumlah Followers" placeholder="-- Pilih range followers --" options={FOLLOWER_OPTIONS} error={errors.followersRange?.message} required {...register("followersRange")} />
+        <Select
+          label="Apakah sudah pernah join MCN?"
+          placeholder="-- Pilih --"
+          options={[
+            { value: "SUDAH", label: "Sudah" },
+            { value: "BELUM", label: "Belum" },
+          ]}
+          error={errors.hasPreviousMcn?.message}
+          required
+          {...register("hasPreviousMcn")}
+        />
         <Captcha onVerify={setCaptchaOk} />
         <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Daftar Sekarang"}
