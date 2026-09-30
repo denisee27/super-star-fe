@@ -42,9 +42,16 @@ export default function InquiryTable({ inquiries, onUpdate }) {
                     {CATEGORY_LABEL[item.category] ?? item.category}
                   </span>
                 </td>
-                <td className="px-4 py-3 font-medium text-ink">{item.fullName ?? item.brandName ?? "-"}</td>
+                <td className="px-4 py-3 font-medium text-ink">
+                  {item.fullName ?? item.brandName ?? "-"}
+                  {item.category === "EVENT" && item.eventName && (
+                    <span className="block font-sans text-xs text-graphite font-normal mt-0.5">{item.eventName}</span>
+                  )}
+                </td>
                 <td className="px-4 py-3 text-graphite">{item.phone ?? item.picContact ?? "-"}</td>
-                <td className="px-4 py-3 text-graphite">{item.domicile}</td>
+                <td className="px-4 py-3 text-graphite">
+                  {(item.province && item.regency) ? `${item.province} — ${item.regency}` : (item.regency ?? "-")}
+                </td>
                 <td className="px-4 py-3"><StatusBadge status={item.status} /></td>
                 <td className="px-4 py-3">
                   <button onClick={() => setSelected(item)} className="p-1.5 rounded hover:bg-superstar-blue/10 transition-colors text-superstar-blue">

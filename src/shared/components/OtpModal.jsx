@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import { Mail, RefreshCw } from "lucide-react";
+import { MessageCircle, RefreshCw } from "lucide-react";
 import Spinner from "./Spinner.jsx";
 
-export default function OtpModal({ isOpen, email, onVerify, onResend, isVerifying, isSending, error, nextResendCooldown = 60 }) {
+export default function OtpModal({ isOpen, phone, onVerify, onResend, isVerifying, isSending, error, nextResendCooldown = 60 }) {
   const [digits, setDigits] = useState(["", "", "", "", "", ""]);
   const [secondsLeft, setSecondsLeft] = useState(300); // 5 min
   const [resendCooldown, setResendCooldown] = useState(60);
@@ -86,15 +86,15 @@ export default function OtpModal({ isOpen, email, onVerify, onResend, isVerifyin
       <div className="relative bg-white rounded-xl shadow-xl w-full max-w-sm p-7">
         {/* Icon */}
         <div className="flex justify-center mb-4">
-          <div className="w-12 h-12 rounded-full bg-superstar-blue/10 flex items-center justify-center">
-            <Mail size={22} className="text-superstar-blue" />
+          <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+            <MessageCircle size={22} className="text-green-600" />
           </div>
         </div>
 
-        <h3 className="font-sans font-semibold text-lg text-ink text-center mb-1">Verifikasi Email</h3>
+        <h3 className="font-sans font-semibold text-lg text-ink text-center mb-1">Verifikasi WhatsApp</h3>
         <p className="font-sans text-sm text-graphite text-center mb-6 leading-relaxed">
-          Kode 6 digit telah dikirim ke<br />
-          <span className="font-semibold text-ink">{email}</span>
+          Kode 6 digit telah dikirim ke WhatsApp<br />
+          <span className="font-semibold text-ink">{phone}</span>
         </p>
 
         {/* 6-digit input */}

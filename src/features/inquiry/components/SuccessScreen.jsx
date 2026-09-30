@@ -18,6 +18,10 @@ const MESSAGES = {
     heading: "Terima Kasih!",
     body: "Formulir kamu sudah kita terima. Klik tombol di bawah untuk langsung chat dengan BD kami dan mulai diskusi kolaborasi!",
   },
+  EVENT: {
+    heading: "Pendaftaran Event Berhasil!",
+    body: "Data kamu sudah kita terima. Tim Superstar akan segera menghubungi kamu terkait event yang kamu daftarkan.",
+  },
 };
 
 function buildWaMessage(template, formData) {

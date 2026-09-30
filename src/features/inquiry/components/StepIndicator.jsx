@@ -2,14 +2,16 @@ import { CheckCircle } from "lucide-react";
 import { INQUIRY_STEP } from "../types/inquiry.types.js";
 
 const STEPS = [
-  { key: INQUIRY_STEP.CATEGORY, label: "Pilih Jalur" },
+  { key: INQUIRY_STEP.TOP_LEVEL, label: "Pilih Jalur" },
   { key: INQUIRY_STEP.FORM, label: "Isi Form" },
   { key: INQUIRY_STEP.SUCCESS, label: "Selesai" },
 ];
 
 function getStepIndex(step) {
-  if (step === INQUIRY_STEP.CATEGORY) return 0;
-  if (step === INQUIRY_STEP.PLATFORM) return 0.5;
+  if (step === INQUIRY_STEP.TOP_LEVEL) return 0;
+  if (step === INQUIRY_STEP.AFFILIATE_TYPE) return 0.33;
+  if (step === INQUIRY_STEP.PLATFORM) return 0.66;
+  if (step === INQUIRY_STEP.EVENT_SELECT) return 0.5;
   if (step === INQUIRY_STEP.FORM) return 1;
   if (step === INQUIRY_STEP.SUCCESS) return 2;
   return 0;

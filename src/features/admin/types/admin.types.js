@@ -16,4 +16,5 @@ export const CATEGORY_LABEL = Object.freeze({
   MCN_AGENCY: "MCN Agency",
   PASUKAN_AFFILIATE: "PAS",
   BRAND_SELLER: "Brand/Seller",
+  EVENT: "Event",
 });

@@ -9,6 +9,7 @@ const CATEGORY_OPTIONS = [
   { value: "MCN_AGENCY", label: "MCN Agency" },
   { value: "PASUKAN_AFFILIATE", label: "Pasukan Affiliate" },
   { value: "BRAND_SELLER", label: "Brand/Seller" },
+  { value: "EVENT", label: "Event" },
 ];
 
 const STATUS_OPTIONS = [

@@ -12,7 +12,7 @@ function getNextCooldown(resendCount) {
   return RESEND_COOLDOWNS_SECS[Math.min(resendCount, RESEND_COOLDOWNS_SECS.length - 1)];
 }
 
-export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } = {}) {
+export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false, otpField = "phone" } = {}) {
   const form = useForm({ resolver: zodResolver(schema) });
   const [pendingData, setPendingData] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,11 +39,11 @@ export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } 
     setResendCount(0);
     setIsSendingOtp(true);
     try {
-      await sendOtp(data.email);
+      await sendOtp(data[otpField]);
       setPendingData(data);
     } catch (err) {
       const msg = err.response?.data?.error ?? "Gagal mengirim kode. Coba lagi.";
-      form.setError("email", { message: msg });
+      form.setError(otpField, { message: msg });
     } finally {
       setIsSendingOtp(false);
     }
@@ -54,7 +54,7 @@ export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } 
     setOtpError("");
     setIsSubmitting(true);
     try {
-      await verifyOtp(pendingData.email, code);
+      await verifyOtp(pendingData[otpField], code);
       const data = pendingData;
       await submitFn(data);
       setPendingData(null);
@@ -71,7 +71,7 @@ export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } 
     setOtpError("");
     setIsSendingOtp(true);
     try {
-      await sendOtp(pendingData.email);
+      await sendOtp(pendingData[otpField]);
       setResendCount((c) => c + 1);
     } catch (err) {
       setOtpError(err.response?.data?.error ?? "Gagal mengirim ulang kode.");
@@ -83,7 +83,7 @@ export function useInquiryForm(schema, submitFn, onSuccess, { skipOtp = false } 
   const confirmModal = createPortal(
     <OtpModal
       isOpen={!!pendingData}
-      email={pendingData?.email ?? ""}
+      phone={pendingData?.[otpField] ?? ""}
       onVerify={handleVerify}
       onResend={handleResend}
       isVerifying={isSubmitting}

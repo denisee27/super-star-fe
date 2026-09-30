@@ -14,3 +14,8 @@ export async function submitBrandInquiry(payload) {
   const response = await apiClient.post("/api/v1/inquiry/brand", payload);
   return response.data.data;
 }
+
+export async function submitEventInquiry(payload) {
+  const response = await apiClient.post("/api/v1/inquiry/event", payload);
+  return response.data.data;
+}

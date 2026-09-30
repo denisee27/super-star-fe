@@ -2,6 +2,18 @@ export const INQUIRY_CATEGORY = Object.freeze({
   MCN_AGENCY: "MCN_AGENCY",
   PASUKAN_AFFILIATE: "PASUKAN_AFFILIATE",
   BRAND_SELLER: "BRAND_SELLER",
+  EVENT: "EVENT",
+});
+
+export const TOP_LEVEL = Object.freeze({
+  AFFILIATE: "AFFILIATE",
+  EVENT: "EVENT",
+  BRAND_SELLER: "BRAND_SELLER",
+});
+
+export const AFFILIATE_TYPE = Object.freeze({
+  MCN: "MCN",
+  PAS: "PAS",
 });
 
 export const MCN_PLATFORM = Object.freeze({
@@ -25,8 +37,10 @@ export const FOLLOWERS_RANGE = Object.freeze({
 });
 
 export const INQUIRY_STEP = Object.freeze({
-  CATEGORY: "category",
+  TOP_LEVEL: "top_level",
+  AFFILIATE_TYPE: "affiliate_type",
   PLATFORM: "platform",
+  EVENT_SELECT: "event_select",
   FORM: "form",
   SUCCESS: "success",
 });

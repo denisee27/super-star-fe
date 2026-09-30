@@ -1,4 +1,4 @@
-export default function Select({ label, error, options = [], placeholder, className = "", ...props }) {
+export default function Select({ label, error, options = [], placeholder, className = "", disabled, ...props }) {
   return (
     <div className="flex flex-col gap-1">
       {label && (
@@ -8,7 +8,8 @@ export default function Select({ label, error, options = [], placeholder, classN
         </label>
       )}
       <select
-        className={`w-full border rounded px-3 py-2.5 font-sans text-sm text-ink bg-white outline-none transition-all duration-200 focus:ring-2 focus:ring-superstar-blue focus:border-superstar-blue ${error ? "border-red-500" : "border-graphite/30"} ${className}`}
+        disabled={disabled}
+        className={`w-full border rounded px-3 py-2.5 font-sans text-sm text-ink bg-white outline-none transition-all duration-200 focus:ring-2 focus:ring-superstar-blue focus:border-superstar-blue ${error ? "border-red-500" : "border-graphite/30"} ${disabled ? "opacity-50 cursor-not-allowed bg-cloud" : ""} ${className}`}
         {...props}
       >
         {placeholder && <option value="">{placeholder}</option>}

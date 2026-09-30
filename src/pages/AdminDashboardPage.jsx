@@ -6,6 +6,7 @@ import { useAuth } from "../shared/hooks/useAuth.jsx";
 import { useInquiryList, useExport, InquiryTable, FilterBar, ExportButton } from "../features/admin/index.js";
 import { useDashboard, StatCard, TrendChart, CategoryChart, StatusChart, TopDomiciliChart, PlatformGmvChart } from "../features/dashboard/index.js";
 import { BdWaSettings } from "../features/settings/index.js";
+import AdminEventsPage from "./AdminEventsPage.jsx";
 import { listAdmins, createAdmin, updateAdmin, resetAdminPassword, deleteAdmin, getLogs } from "../features/admin/services/adminService.js";
 import Sidebar from "../shared/components/Sidebar.jsx";
 import Spinner from "../shared/components/Spinner.jsx";
@@ -827,6 +828,7 @@ export default function AdminDashboardPage() {
         <main className="flex-1 overflow-y-auto px-6 py-6">
           {activeView === "dashboard" && <DashboardView />}
           {activeView === "inquiries" && <InquiriesView />}
+          {activeView === "events" && <AdminEventsPage />}
           {activeView === "settings" && <BdWaSettings />}
           {activeView === "users" && isSuperAdmin && <UserManagementView />}
           {activeView === "logs" && isSuperAdmin && <AuditLogView />}

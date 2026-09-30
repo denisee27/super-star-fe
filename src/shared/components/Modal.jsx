@@ -2,7 +2,9 @@ import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
-export default function Modal({ isOpen, onClose, title, children }) {
+const SIZE_CLASS = { sm: "max-w-sm", md: "max-w-md", lg: "max-w-2xl", xl: "max-w-5xl" };
+
+export default function Modal({ isOpen, onClose, title, children, size = "md" }) {
   useEffect(() => {
     function handleKey(e) {
       if (e.key === "Escape") onClose();
@@ -22,7 +24,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div className={`relative bg-white rounded-lg shadow-xl w-full ${SIZE_CLASS[size] ?? SIZE_CLASS.md} max-h-[90vh] overflow-y-auto`}>
         <div className="flex items-center justify-between p-5 border-b border-graphite/20">
           <h2 className="font-sans font-semibold text-lg text-ink">{title}</h2>
           <button onClick={onClose} className="p-1 rounded hover:bg-cloud transition-colors">

@@ -1,10 +1,14 @@
 export { useCategoryFlow } from "./hooks/useCategoryFlow.js";
 export { useInquiryForm } from "./hooks/useInquiryForm.jsx";
 export { default as StepIndicator } from "./components/StepIndicator.jsx";
+export { default as TopLevelSelector } from "./components/TopLevelSelector.jsx";
+export { default as AffiliateTypeSelector } from "./components/AffiliateTypeSelector.jsx";
 export { default as CategorySelector } from "./components/CategorySelector.jsx";
 export { default as PlatformSelector } from "./components/PlatformSelector.jsx";
+export { default as EventSelector } from "./components/EventSelector.jsx";
 export { default as McnForm } from "./components/McnForm.jsx";
 export { default as PasForm } from "./components/PasForm.jsx";
 export { default as BrandForm } from "./components/BrandForm.jsx";
+export { default as EventForm } from "./components/EventForm.jsx";
 export { default as SuccessScreen } from "./components/SuccessScreen.jsx";
-export { INQUIRY_CATEGORY, MCN_PLATFORM, INQUIRY_STEP } from "./types/inquiry.types.js";
+export { INQUIRY_CATEGORY, MCN_PLATFORM, INQUIRY_STEP, TOP_LEVEL, AFFILIATE_TYPE } from "./types/inquiry.types.js";

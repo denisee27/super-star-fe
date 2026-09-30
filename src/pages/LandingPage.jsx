@@ -1,15 +1,34 @@
-import { INQUIRY_CATEGORY, INQUIRY_STEP, useCategoryFlow, CategorySelector, PlatformSelector, McnForm, PasForm, BrandForm, StepIndicator, SuccessScreen } from "../features/inquiry/index.js";
+import { useEffect, useState } from "react";
+import {
+  INQUIRY_CATEGORY, INQUIRY_STEP,
+  useCategoryFlow,
+  TopLevelSelector, AffiliateTypeSelector, PlatformSelector, EventSelector,
+  McnForm, PasForm, BrandForm, EventForm,
+  StepIndicator, SuccessScreen,
+} from "../features/inquiry/index.js";
+import { getActiveEvents } from "../features/inquiry/services/eventService.js";
 import Logo from "../shared/components/Logo.jsx";
 
 export default function LandingPage() {
   const flow = useCategoryFlow();
+  const [activeEvents, setActiveEvents] = useState([]);
+
+  useEffect(() => {
+    getActiveEvents().then(setActiveEvents);
+  }, []);
 
   function renderContent() {
-    if (flow.step === INQUIRY_STEP.CATEGORY) {
-      return <CategorySelector onSelect={flow.selectCategory} />;
+    if (flow.step === INQUIRY_STEP.TOP_LEVEL) {
+      return <TopLevelSelector onSelect={flow.selectTopLevel} activeEvents={activeEvents} />;
+    }
+    if (flow.step === INQUIRY_STEP.AFFILIATE_TYPE) {
+      return <AffiliateTypeSelector onSelect={flow.selectAffiliateType} onBack={flow.goBack} />;
     }
     if (flow.step === INQUIRY_STEP.PLATFORM) {
       return <PlatformSelector onSelect={flow.selectPlatform} onBack={flow.goBack} />;
+    }
+    if (flow.step === INQUIRY_STEP.EVENT_SELECT) {
+      return <EventSelector events={activeEvents} onSelect={flow.selectEvent} onBack={flow.goBack} />;
     }
     if (flow.step === INQUIRY_STEP.FORM) {
       if (flow.selectedCategory === INQUIRY_CATEGORY.MCN_AGENCY) {
@@ -18,6 +37,9 @@ export default function LandingPage() {
       if (flow.selectedCategory === INQUIRY_CATEGORY.PASUKAN_AFFILIATE) {
         return <PasForm onSuccess={flow.onSuccess} onBack={flow.goBack} />;
       }
+      if (flow.selectedCategory === INQUIRY_CATEGORY.EVENT) {
+        return <EventForm event={flow.selectedEvent} onSuccess={flow.onSuccess} onBack={flow.goBack} />;
+      }
       return <BrandForm onSuccess={flow.onSuccess} onBack={flow.goBack} />;
     }
     return <SuccessScreen category={flow.selectedCategory} formData={flow.lastFormData} onReset={flow.reset} />;
@@ -25,7 +47,6 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-hero-gradient flex flex-col">
-      {/* Hero */}
       <header className="px-6 py-8 text-center">
         <div className="flex justify-center mb-8">
           <Logo variant="white" height={48} />
@@ -40,7 +61,6 @@ export default function LandingPage() {
         <p className="font-sans text-white/60 text-sm mt-2">Pilih jalurmu sekarang 👇</p>
       </header>
 
-      {/* Card Panel */}
       <main className="flex-1 flex justify-center px-4 pb-12">
         <div className="w-full max-w-lg bg-cloud rounded-2xl shadow-2xl p-6 md:p-8">
           <StepIndicator step={flow.step} category={flow.selectedCategory} />

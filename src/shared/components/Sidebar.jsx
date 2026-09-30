@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings, UserCog, ClipboardList } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings, UserCog, CalendarDays } from "lucide-react";
 import Logo from "./Logo.jsx";
 import ConfirmModal from "./ConfirmModal.jsx";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "inquiries", label: "Data Inquiry", icon: Users },
+  { id: "events", label: "Events", icon: CalendarDays },
   { id: "settings", label: "Pengaturan", icon: Settings },
 ];
 

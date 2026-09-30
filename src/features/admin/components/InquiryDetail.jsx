@@ -50,11 +50,22 @@ export default function InquiryDetail({ inquiry, isOpen, onClose, onUpdate }) {
         </div>
 
         <dl className="grid grid-cols-2 gap-4">
+          {inquiry.category === "EVENT" && (
+            <Field label="Nama Event" value={inquiry.eventName} />
+          )}
           <Field label="Nama / Brand" value={inquiry.fullName ?? inquiry.brandName} />
           <Field label="No HP / Kontak" value={inquiry.phone ?? inquiry.picContact} />
-          <Field label="Username" value={inquiry.username} />
+          <Field label="Username TikTok" value={inquiry.username} />
+          <Field label="Username Shopee" value={inquiry.usernameShopee} />
           <Field label="Link Akun / Toko" value={inquiry.accountLink ?? inquiry.storeLink} />
-          <Field label="Domisili" value={inquiry.domicile} />
+          <Field
+            label="Domisili"
+            value={
+              (inquiry.province && inquiry.regency)
+                ? `${inquiry.province} — ${inquiry.regency}`
+                : inquiry.regency
+            }
+          />
           <Field label="GMV / Bulan" value={inquiry.gmvRange} />
           <Field label="Followers" value={inquiry.followersRange} />
           {inquiry.category === "MCN_AGENCY" && (

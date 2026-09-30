@@ -3,8 +3,9 @@ import { z } from "zod";
 import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
 import Input from "../../../shared/components/Input.jsx";
+import PhoneInput from "../../../shared/components/PhoneInput.jsx";
 import Select from "../../../shared/components/Select.jsx";
-import CitySelect from "../../../shared/components/CitySelect.jsx";
+import RegionSelect from "../../../shared/components/RegionSelect.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import Captcha from "../../../shared/components/Captcha.jsx";
@@ -17,9 +18,12 @@ const GMV_OPTIONS = Object.values(GMV_RANGE).map((v) => ({ value: v, label: v })
 const PAS_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
   fullName: z.string().min(2, "Nama minimal 2 karakter"),
-  username: z.string().min(2, "Username wajib diisi"),
+  phone: z.string().regex(/^\+628[0-9]{8,11}$/, "Nomor HP tidak valid"),
+  username: z.string().optional(),
+  usernameShopee: z.string().optional(),
   gmvRange: z.string().min(1, "Pilih range GMV"),
-  domicile: z.string().min(2, "Domisili wajib diisi"),
+  province: z.string().min(1, "Pilih provinsi"),
+  regency: z.string().min(1, "Pilih kabupaten/kota"),
 });
 
 export default function PasForm({ onSuccess, onBack }) {
@@ -35,13 +39,35 @@ export default function PasForm({ onSuccess, onBack }) {
       <form onSubmit={onSubmit} className="space-y-4">
         <Input label="Email" type="email" placeholder="email@kamu.com" error={errors.email?.message} required {...register("email")} />
         <Input label="Nama" placeholder="Nama kamu" error={errors.fullName?.message} required {...register("fullName")} />
-        <Input label="Username (TikTok / Shopee)" placeholder="@username" error={errors.username?.message} required {...register("username")} />
+        <Controller
+          control={control}
+          name="phone"
+          render={({ field }) => (
+            <PhoneInput label="No HP / WhatsApp" required error={errors.phone?.message} {...field} />
+          )}
+        />
+        <Input label="Username TikTok" placeholder="@username_tiktok" error={errors.username?.message} {...register("username")} />
+        <Input label="Username Shopee" placeholder="@username_shopee" error={errors.usernameShopee?.message} {...register("usernameShopee")} />
         <Select label="GMV per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Controller
           control={control}
-          name="domicile"
-          render={({ field }) => (
-            <CitySelect label="Domisili / Kota" error={errors.domicile?.message} required value={field.value || ""} onChange={field.onChange} />
+          name="province"
+          render={({ field: pField }) => (
+            <Controller
+              control={control}
+              name="regency"
+              render={({ field: rField }) => (
+                <RegionSelect
+                  province={pField.value}
+                  regency={rField.value}
+                  onProvinceChange={pField.onChange}
+                  onRegencyChange={rField.onChange}
+                  provinceError={errors.province?.message}
+                  regencyError={errors.regency?.message}
+                  required
+                />
+              )}
+            />
           )}
         />
         {errors.root && (

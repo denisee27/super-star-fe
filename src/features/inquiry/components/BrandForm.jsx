@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { z } from "zod";
+import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
 import Input from "../../../shared/components/Input.jsx";
+import PhoneInput from "../../../shared/components/PhoneInput.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import Captcha from "../../../shared/components/Captcha.jsx";
@@ -15,13 +17,13 @@ const BRAND_SCHEMA = z.object({
   productCategory: z.string().min(2, "Kategori produk wajib diisi"),
   picName: z.string().min(2, "Nama PIC wajib diisi"),
   picRole: z.string().min(2, "Role PIC wajib diisi"),
-  picContact: z.string().min(8, "Kontak PIC tidak valid"),
+  picContact: z.string().regex(/^\+628[0-9]{8,11}$/, "Nomor HP tidak valid"),
 });
 
 export default function BrandForm({ onSuccess, onBack }) {
   const [captchaOk, setCaptchaOk] = useState(false);
-  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(BRAND_SCHEMA, submitBrandInquiry, onSuccess);
-  const { register, formState: { errors } } = form;
+  const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(BRAND_SCHEMA, submitBrandInquiry, onSuccess, { otpField: "picContact" });
+  const { register, control, formState: { errors } } = form;
 
   return (
     <div>
@@ -35,7 +37,13 @@ export default function BrandForm({ onSuccess, onBack }) {
         <Input label="Kategori Produk" placeholder="Contoh: BHPC, Home Living, Mom & Baby, Lifestyle" error={errors.productCategory?.message} required {...register("productCategory")} />
         <Input label="Nama PIC" placeholder="Nama penanggung jawab" error={errors.picName?.message} required {...register("picName")} />
         <Input label="Role PIC" placeholder="Contoh: Owner, Marketing Manager" error={errors.picRole?.message} required {...register("picRole")} />
-        <Input label="Kontak PIC / WhatsApp" placeholder="08xxxxxxxxxx" error={errors.picContact?.message} required {...register("picContact")} />
+        <Controller
+          control={control}
+          name="picContact"
+          render={({ field }) => (
+            <PhoneInput label="Kontak PIC / WhatsApp" required error={errors.picContact?.message} {...field} />
+          )}
+        />
         <Captcha onVerify={setCaptchaOk} />
         <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Kirim"}

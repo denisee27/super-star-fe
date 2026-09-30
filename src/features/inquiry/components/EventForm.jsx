@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { z } from "zod";
 import { Controller } from "react-hook-form";
 import { ArrowLeft } from "lucide-react";
@@ -9,14 +8,22 @@ import RegionSelect from "../../../shared/components/RegionSelect.jsx";
 import Button from "../../../shared/components/Button.jsx";
 import Spinner from "../../../shared/components/Spinner.jsx";
 import Captcha from "../../../shared/components/Captcha.jsx";
-import { GMV_RANGE, FOLLOWERS_RANGE, MCN_PLATFORM } from "../types/inquiry.types.js";
-import { submitMcnInquiry } from "../services/inquiryService.js";
+import { useState } from "react";
+import { GMV_RANGE, FOLLOWERS_RANGE } from "../types/inquiry.types.js";
+import { submitEventInquiry } from "../services/inquiryService.js";
 import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 
 const GMV_OPTIONS = Object.values(GMV_RANGE).map((v) => ({ value: v, label: v }));
 const FOLLOWER_OPTIONS = Object.values(FOLLOWERS_RANGE).map((v) => ({ value: v, label: v }));
 
-const MCN_SCHEMA = z.object({
+const ACCOUNT_LINK_PLACEHOLDER = {
+  TIKTOK_SHOP: "https://www.tiktok.com/@username",
+  SHOPEE: "https://shopee.co.id/username",
+  TOKOPEDIA: "https://www.tokopedia.com/username",
+  INSTAGRAM: "https://www.instagram.com/username",
+};
+
+const EVENT_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
   fullName: z.string().min(2, "Nama minimal 2 karakter"),
   phone: z.string().regex(/^\+628[0-9]{8,11}$/, "Nomor HP tidak valid"),
@@ -25,24 +32,13 @@ const MCN_SCHEMA = z.object({
   regency: z.string().min(1, "Pilih kabupaten/kota"),
   gmvRange: z.string().min(1, "Pilih range GMV"),
   followersRange: z.string().min(1, "Pilih range followers"),
-  hasPreviousMcn: z.enum(["SUDAH", "BELUM"], { errorMap: () => ({ message: "Pilih salah satu" }) }),
 });
 
-const PLATFORM_LABEL = {
-  [MCN_PLATFORM.TIKTOK_SHOP]: "MCN TikTok Shop by Tokopedia",
-  [MCN_PLATFORM.SHOPEE]: "MCN Shopee",
-};
-
-const ACCOUNT_LINK_PLACEHOLDER = {
-  [MCN_PLATFORM.TIKTOK_SHOP]: "https://www.tiktok.com/@username",
-  [MCN_PLATFORM.SHOPEE]: "https://shopee.co.id/username",
-};
-
-export default function McnForm({ platform, onSuccess, onBack }) {
+export default function EventForm({ event, onSuccess, onBack }) {
   const [captchaOk, setCaptchaOk] = useState(false);
   const { form, isSubmitting, onSubmit, confirmModal } = useInquiryForm(
-    MCN_SCHEMA,
-    (data) => submitMcnInquiry({ ...data, platform }),
+    EVENT_SCHEMA,
+    (data) => submitEventInquiry({ ...data, eventId: event.id }),
     onSuccess,
     { otpField: "phone" }
   );
@@ -54,7 +50,7 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         <ArrowLeft size={16} /> Kembali
       </button>
       <div className="inline-block bg-superstar-blue/10 text-superstar-blue font-sans text-xs font-semibold px-2 py-1 rounded mb-5">
-        {PLATFORM_LABEL[platform]}
+        {event?.name}
       </div>
       <form onSubmit={onSubmit} className="space-y-4">
         <Input label="Email" type="email" placeholder="email@kamu.com" error={errors.email?.message} required {...register("email")} />
@@ -66,7 +62,7 @@ export default function McnForm({ platform, onSuccess, onBack }) {
             <PhoneInput label="No HP / WhatsApp" required error={errors.phone?.message} {...field} />
           )}
         />
-        <Input label="Link Akun" placeholder={ACCOUNT_LINK_PLACEHOLDER[platform] ?? "https://"} error={errors.accountLink?.message} required {...register("accountLink")} />
+        <Input label="Link Akun" placeholder={ACCOUNT_LINK_PLACEHOLDER[event?.platform] ?? "https://"} error={errors.accountLink?.message} required {...register("accountLink")} />
         <Controller
           control={control}
           name="province"
@@ -90,17 +86,6 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         />
         <Select label="GMV Live/Konten rata-rata per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Select label="Jumlah Followers" placeholder="-- Pilih range followers --" options={FOLLOWER_OPTIONS} error={errors.followersRange?.message} required {...register("followersRange")} />
-        <Select
-          label="Apakah sudah pernah join MCN?"
-          placeholder="-- Pilih --"
-          options={[
-            { value: "SUDAH", label: "Sudah" },
-            { value: "BELUM", label: "Belum" },
-          ]}
-          error={errors.hasPreviousMcn?.message}
-          required
-          {...register("hasPreviousMcn")}
-        />
         <Captcha onVerify={setCaptchaOk} />
         <Button type="submit" disabled={isSubmitting || !captchaOk} className="w-full mt-2">
           {isSubmitting ? <><Spinner size={16} /> Mengirim...</> : "Daftar Sekarang"}
