@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings, UserCog, CalendarDays } from "lucide-react";
+import { LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, Settings, UserCog, CalendarDays, ClipboardList } from "lucide-react";
 import Logo from "./Logo.jsx";
 import ConfirmModal from "./ConfirmModal.jsx";
 
@@ -12,7 +12,7 @@ const NAV_ITEMS = [
 
 const SUPER_ADMIN_ITEMS = [
   { id: "users", label: "Pengguna", icon: UserCog },
-  // { id: "logs", label: "Log Aktivitas", icon: ClipboardList },
+  { id: "logs", label: "Log Aktivitas", icon: ClipboardList },
 ];
 
 export default function Sidebar({ activeView, onViewChange, onLogout, collapsed, onToggle, isSuperAdmin }) {
