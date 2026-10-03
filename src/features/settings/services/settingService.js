@@ -5,7 +5,11 @@ export async function getBrandWaConfig() {
   return response.data.data;
 }
 
-export async function updateSettings(payload) {
-  const response = await apiClient.patch("/api/v1/settings", payload);
+export async function getPixelConfig() {
+  const response = await apiClient.get("/api/v1/settings/pixel");
   return response.data.data;
+}
+
+export async function updateSettings(payload) {
+  await apiClient.patch("/api/v1/settings", payload);
 }

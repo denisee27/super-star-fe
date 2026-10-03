@@ -5,7 +5,7 @@ import { Users, TrendingUp, Star, RefreshCw, ChevronLeft, ChevronRight, Calendar
 import { useAuth } from "../shared/hooks/useAuth.jsx";
 import { useInquiryList, useExport, InquiryTable, FilterBar, ExportButton } from "../features/admin/index.js";
 import { useDashboard, StatCard, TrendChart, CategoryChart, StatusChart, TopDomiciliChart, PlatformGmvChart } from "../features/dashboard/index.js";
-import { BdWaSettings } from "../features/settings/index.js";
+import { BdWaSettings, MetaPixelSettings } from "../features/settings/index.js";
 import AdminEventsPage from "./AdminEventsPage.jsx";
 import { listAdmins, createAdmin, updateAdmin, resetAdminPassword, deleteAdmin, getLogs } from "../features/admin/services/adminService.js";
 import Sidebar from "../shared/components/Sidebar.jsx";
@@ -221,7 +221,7 @@ function InquiriesView() {
   );
 }
 
-const EMPTY_FORM = { email: "", name: "", password: "" };
+const EMPTY_FORM = { email: "", name: "", phone: "", password: "" };
 
 function CreateAdminModal({ isOpen, onClose, onCreated }) {
   const [form, setForm] = useState(EMPTY_FORM);
@@ -241,7 +241,7 @@ function CreateAdminModal({ isOpen, onClose, onCreated }) {
     if (form.password.length < 8) { setFormError("Password minimal 8 karakter."); return; }
     setIsCreating(true);
     try {
-      await createAdmin(form);
+      await createAdmin({ email: form.email, name: form.name, phone: form.phone || undefined, password: form.password });
       handleClose();
       onCreated();
     } catch (err) {
@@ -271,6 +271,16 @@ function CreateAdminModal({ isOpen, onClose, onCreated }) {
             value={form.name}
             onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
             placeholder="Nama lengkap admin"
+            className="w-full font-sans text-sm border-2 border-graphite/25 rounded-lg px-3 py-2.5 outline-none focus:border-superstar-blue text-ink transition-all"
+          />
+        </div>
+        <div>
+          <label className="block font-sans text-sm font-medium text-ink mb-1.5">No. WhatsApp <span className="text-red-500">*</span></label>
+          <input
+            type="text"
+            value={form.phone}
+            onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+            placeholder="628xxxxxxxxxx (untuk OTP login)"
             className="w-full font-sans text-sm border-2 border-graphite/25 rounded-lg px-3 py-2.5 outline-none focus:border-superstar-blue text-ink transition-all"
           />
         </div>
@@ -652,6 +662,38 @@ function UserManagementView() {
   );
 }
 
+const SETTINGS_TABS = [
+  { id: "whatsapp", label: "WhatsApp BD" },
+  { id: "pixel", label: "Meta Pixel" },
+];
+
+function SettingsView() {
+  const [tab, setTab] = useState("whatsapp");
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-display text-2xl uppercase text-ink">Pengaturan</h1>
+      </div>
+      <div className="flex gap-1 bg-cloud rounded-lg p-1 max-w-xs">
+        {SETTINGS_TABS.map(({ id, label }) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => setTab(id)}
+            className={`flex-1 py-1.5 rounded-md font-sans text-sm font-medium transition-colors ${
+              tab === id ? "bg-white text-ink shadow-sm" : "text-graphite hover:text-ink"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      {tab === "whatsapp" && <BdWaSettings />}
+      {tab === "pixel" && <MetaPixelSettings />}
+    </div>
+  );
+}
+
 const ACTION_LABELS = { LOGIN: "Login", CREATE: "Buat", UPDATE: "Update", DELETE: "Hapus" };
 const RESOURCE_LABELS = { auth: "Autentikasi", admin: "Admin", inquiry: "Inquiry", setting: "Pengaturan" };
 const ACTION_COLORS = {
@@ -829,7 +871,7 @@ export default function AdminDashboardPage() {
           {activeView === "dashboard" && <DashboardView />}
           {activeView === "inquiries" && <InquiriesView />}
           {activeView === "events" && <AdminEventsPage />}
-          {activeView === "settings" && <BdWaSettings />}
+          {activeView === "settings" && <SettingsView />}
           {activeView === "users" && isSuperAdmin && <UserManagementView />}
           {activeView === "logs" && isSuperAdmin && <AuditLogView />}
         </main>

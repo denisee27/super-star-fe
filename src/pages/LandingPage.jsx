@@ -6,12 +6,19 @@ import {
   McnForm, PasForm, BrandForm, EventForm,
   StepIndicator, SuccessScreen,
 } from "../features/inquiry/index.js";
+import { useMetaPixel } from "../features/inquiry/hooks/useMetaPixel.js";
 import { getActiveEvents } from "../features/inquiry/services/eventService.js";
 import Logo from "../shared/components/Logo.jsx";
 
 export default function LandingPage() {
   const flow = useCategoryFlow();
   const [activeEvents, setActiveEvents] = useState([]);
+
+  useMetaPixel({
+    step: flow.step,
+    selectedCategory: flow.selectedCategory,
+    selectedPlatform: flow.selectedPlatform,
+  });
 
   useEffect(() => {
     getActiveEvents().then(setActiveEvents);
