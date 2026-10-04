@@ -69,7 +69,7 @@ export default function InquiryDetail({ inquiry, isOpen, onClose, onUpdate }) {
           <Field label="GMV / Bulan" value={inquiry.gmvRange} />
           <Field label="Followers" value={inquiry.followersRange} />
           {inquiry.category === "MCN_AGENCY" && (
-            <Field label="Pernah join MCN?" value={inquiry.hasPreviousMcn === "SUDAH" ? "Sudah" : inquiry.hasPreviousMcn === "BELUM" ? "Belum" : null} />
+            <Field label="Bersedia bergabung ke MCN?" value={inquiry.hasPreviousMcn === "YA" ? "Ya" : inquiry.hasPreviousMcn === "TIDAK" ? "Tidak" : null} />
           )}
           <Field label="Kategori Produk" value={inquiry.productCategory} />
           <Field label="Nama PIC" value={inquiry.picName} />

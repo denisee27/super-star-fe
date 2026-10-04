@@ -1,7 +1,6 @@
 import axios from "axios";
-import { env } from "../../config/env.js";
 
-const base = `${env.API_BASE_URL}/api/v1/otp`;
+const base = `${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080"}/api/v1/otp`;
 
 export async function sendOtp(phone) {
   const res = await axios.post(`${base}/send`, { phone });

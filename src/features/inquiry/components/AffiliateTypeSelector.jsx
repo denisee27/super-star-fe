@@ -12,7 +12,7 @@ const AFFILIATE_OPTIONS = [
     key: "PAS",
     icon: Users,
     title: "Join Komunitas Pasukan Affiliate Superstar",
-    description: "Bergabung ke komunitas affiliate. Belajar, sharing strategi, dan terima informasi campaign.",
+    description: "Bergabung ke komunitas affiliate Superstar untuk mendapatkan komisi lebih tinggi dan sample lebih banyak.",
     tag: "Komunitas",
   },
 ];

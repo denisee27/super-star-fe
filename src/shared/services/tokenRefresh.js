@@ -1,5 +1,4 @@
 import axios from "axios";
-import { env } from "../../config/env.js";
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -22,7 +21,7 @@ export async function silentRefresh() {
   isRefreshing = true;
   try {
     const response = await axios.post(
-      `${env.API_BASE_URL}/api/v1/admin/refresh`,
+      `${import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080"}/api/v1/admin/refresh`,
       {},
       { withCredentials: true }
     );

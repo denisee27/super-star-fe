@@ -20,12 +20,12 @@ const MCN_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
   fullName: z.string().min(2, "Nama minimal 2 karakter"),
   phone: z.string().regex(/^\+628[0-9]{8,11}$/, "Nomor HP tidak valid"),
-  accountLink: z.string().url("Link harus berupa URL valid (https://...)"),
+  accountLink: z.string().min(1, "Link akun wajib diisi"),
   province: z.string().min(1, "Pilih provinsi"),
   regency: z.string().min(1, "Pilih kabupaten/kota"),
   gmvRange: z.string().min(1, "Pilih range GMV"),
   followersRange: z.string().min(1, "Pilih range followers"),
-  hasPreviousMcn: z.enum(["SUDAH", "BELUM"], { errorMap: () => ({ message: "Pilih salah satu" }) }),
+  hasPreviousMcn: z.enum(["YA", "TIDAK"], { errorMap: () => ({ message: "Pilih salah satu" }) }),
 });
 
 const PLATFORM_LABEL = {
@@ -91,11 +91,11 @@ export default function McnForm({ platform, onSuccess, onBack }) {
         <Select label="GMV Live/Konten rata-rata per bulan" placeholder="-- Pilih range GMV --" options={GMV_OPTIONS} error={errors.gmvRange?.message} required {...register("gmvRange")} />
         <Select label="Jumlah Followers" placeholder="-- Pilih range followers --" options={FOLLOWER_OPTIONS} error={errors.followersRange?.message} required {...register("followersRange")} />
         <Select
-          label="Apakah sudah pernah join MCN?"
+          label="Apakah bersedia bergabung ke MCN?"
           placeholder="-- Pilih --"
           options={[
-            { value: "SUDAH", label: "Sudah" },
-            { value: "BELUM", label: "Belum" },
+            { value: "YA", label: "Ya" },
+            { value: "TIDAK", label: "Tidak" },
           ]}
           error={errors.hasPreviousMcn?.message}
           required

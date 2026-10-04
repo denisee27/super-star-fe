@@ -1,5 +1,4 @@
 import axios from "axios";
-import { env } from "../../config/env.js";
 import { silentRefresh } from "./tokenRefresh.js";
 
 let _setAccessToken = null;
@@ -9,7 +8,7 @@ export function setTokenSetter(fn) {
 }
 
 export const apiClient = axios.create({
-  baseURL: env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8080",
   withCredentials: true,
 });
 

@@ -27,7 +27,7 @@ const EVENT_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
   fullName: z.string().min(2, "Nama minimal 2 karakter"),
   phone: z.string().regex(/^\+628[0-9]{8,11}$/, "Nomor HP tidak valid"),
-  accountLink: z.string().url("Link harus berupa URL valid (https://...)"),
+  accountLink: z.string().min(1, "Link akun wajib diisi"),
   province: z.string().min(1, "Pilih provinsi"),
   regency: z.string().min(1, "Pilih kabupaten/kota"),
   gmvRange: z.string().min(1, "Pilih range GMV"),

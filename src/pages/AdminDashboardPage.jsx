@@ -694,13 +694,22 @@ function SettingsView() {
   );
 }
 
-const ACTION_LABELS = { LOGIN: "Login", CREATE: "Buat", UPDATE: "Update", DELETE: "Hapus" };
+const ACTION_LABELS = { LOGIN: "Login", CREATE: "Buat", UPDATE: "Update", DELETE: "Hapus", EXPORT: "Download" };
+const ACTION_FILTER_OPTIONS = [
+  { value: "", label: "Semua" },
+  { value: "LOGIN", label: "Login" },
+  { value: "CREATE", label: "Buat" },
+  { value: "UPDATE", label: "Update" },
+  { value: "DELETE", label: "Hapus" },
+  { value: "EXPORT", label: "Download" },
+];
 const RESOURCE_LABELS = { auth: "Autentikasi", admin: "Admin", inquiry: "Inquiry", setting: "Pengaturan" };
 const ACTION_COLORS = {
   LOGIN: "bg-blue-50 text-blue-700",
   CREATE: "bg-green-50 text-green-700",
   UPDATE: "bg-amber-50 text-amber-700",
   DELETE: "bg-red-50 text-red-600",
+  EXPORT: "bg-purple-50 text-purple-700",
 };
 
 const LIMIT_OPTIONS = [10, 25, 50, 100];
@@ -714,13 +723,14 @@ function AuditLogView() {
   const [limit, setLimit] = useState(20);
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
+  const [action, setAction] = useState("");
   const debounceRef = useRef(null);
 
-  const fetchLogs = useCallback(async (p, lim, q) => {
+  const fetchLogs = useCallback(async (p, lim, q, act) => {
     setIsLoading(true);
     setError("");
     try {
-      const res = await getLogs({ page: p, limit: lim, search: q || undefined });
+      const res = await getLogs({ page: p, limit: lim, search: q || undefined, action: act || undefined });
       setLogs(res.data);
       setMeta(res.meta);
     } catch {
@@ -730,7 +740,7 @@ function AuditLogView() {
     }
   }, []);
 
-  useEffect(() => { fetchLogs(page, limit, search); }, [fetchLogs, page, limit, search]);
+  useEffect(() => { fetchLogs(page, limit, search, action); }, [fetchLogs, page, limit, search, action]);
 
   function handleSearchChange(e) {
     const val = e.target.value;
@@ -744,6 +754,11 @@ function AuditLogView() {
 
   function handleLimitChange(e) {
     setLimit(Number(e.target.value));
+    setPage(1);
+  }
+
+  function handleActionChange(val) {
+    setAction(val);
     setPage(1);
   }
 
@@ -779,6 +794,24 @@ function AuditLogView() {
             ))}
           </select>
         </div>
+      </div>
+
+      {/* Action filter chips */}
+      <div className="flex flex-wrap gap-2">
+        {ACTION_FILTER_OPTIONS.map(opt => (
+          <button
+            key={opt.value}
+            type="button"
+            onClick={() => handleActionChange(opt.value)}
+            className={`px-3 py-1 rounded-full font-sans text-xs font-semibold transition-colors ${
+              action === opt.value
+                ? "bg-superstar-blue text-white"
+                : "bg-cloud text-graphite hover:bg-graphite/15"
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
       </div>
 
       <div className="bg-white rounded-xl border border-graphite/15 overflow-hidden">

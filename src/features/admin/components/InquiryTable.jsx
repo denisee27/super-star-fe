@@ -24,13 +24,14 @@ export default function InquiryTable({ inquiries, onUpdate }) {
               <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Kontak</th>
               <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Domisili</th>
               <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Status</th>
+              <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Terakhir Diupdate</th>
               <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {inquiries.length === 0 && (
               <tr>
-                <td colSpan={8} className="text-center py-10 text-graphite">Belum ada data inquiry.</td>
+                <td colSpan={9} className="text-center py-10 text-graphite">Belum ada data inquiry.</td>
               </tr>
             )}
             {inquiries.map((item, idx) => (
@@ -53,6 +54,16 @@ export default function InquiryTable({ inquiries, onUpdate }) {
                   {(item.province && item.regency) ? `${item.province} — ${item.regency}` : (item.regency ?? "-")}
                 </td>
                 <td className="px-4 py-3"><StatusBadge status={item.status} /></td>
+                <td className="px-4 py-3 text-graphite whitespace-nowrap">
+                  {item.lastUpdatedBy ? (
+                    <>
+                      <span className="block text-xs">{formatDate(item.updatedAt)}</span>
+                      <span className="block text-xs font-medium text-ink">{item.lastUpdatedBy}</span>
+                    </>
+                  ) : (
+                    <span className="text-xs text-graphite/50">—</span>
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <button onClick={() => setSelected(item)} className="p-1.5 rounded hover:bg-superstar-blue/10 transition-colors text-superstar-blue">
                     <Eye size={16} />

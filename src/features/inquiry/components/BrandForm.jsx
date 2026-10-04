@@ -13,7 +13,7 @@ import { useInquiryForm } from "../hooks/useInquiryForm.jsx";
 const BRAND_SCHEMA = z.object({
   email: z.string().email("Format email tidak valid"),
   brandName: z.string().min(2, "Nama brand minimal 2 karakter"),
-  storeLink: z.string().url("Link toko harus berupa URL valid"),
+  storeLink: z.string().min(1, "Link toko wajib diisi"),
   productCategory: z.string().min(2, "Kategori produk wajib diisi"),
   picName: z.string().min(2, "Nama PIC wajib diisi"),
   picRole: z.string().min(2, "Role PIC wajib diisi"),
