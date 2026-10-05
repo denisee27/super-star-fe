@@ -13,7 +13,7 @@ const CATEGORIES = [
   {
     key: INQUIRY_CATEGORY.PASUKAN_AFFILIATE,
     icon: Users,
-    title: "Join Komunitas Pasukan Affiliate Superstar",
+    title: "itas Pasukan Affiliate Superstar",
     description:
       "Jalur bagi individu yang ingin bergabung ke dalam komunitas affiliate dari Superstar Agency. Belajar, sharing strategi, dan menerima informasi campaign.",
     tag: "Komunitas",
